@@ -24,14 +24,19 @@ namespace GasingSimulator
 
         static async Task PassaMacchina(string macchina)
         {
-            Console.WriteLine($"{macchina} sta attendendo per passare");
+            string[] animazioni;
             await PonteLevatoio.WaitAsync();
             try
             {
-                Console.WriteLine($"{macchina} sta attraversando il ponte...");
-                await Task.Delay(5000);
-                Console.WriteLine($"{macchina} ha finito di attraversare il ponte...");
+                animazioni = Attraversamento(macchina);
+                for (int i = 0; i < 4; i++)
+                {
 
+                    Console.WriteLine(animazioni[i]);
+                    Thread.Sleep(1000);
+                    Console.Clear();
+                }
+                Console.WriteLine($"{macchina} ha finito di attraversare il ponte...");
             }
             finally
             {
@@ -39,7 +44,7 @@ namespace GasingSimulator
             }
         }
 
-        static async Task AttraversanoMacchine()
+        public static async Task AttraversanoMacchine()
         {
             Task[] tasks = new Task[Macchine.Count];
             for (int i = 0; i < Macchine.Count; i++)
@@ -57,9 +62,27 @@ namespace GasingSimulator
             sb.AppendLine("Le seguenti macchine sono in coda");
             foreach (string macchina in Macchine) 
             {
-                
+                sb.AppendLine(macchina.ToString());
             }
             return sb.ToString();
+        }
+
+        public static string[] Attraversamento(string macchina)
+        {
+            string[] figure = new string[4];
+            figure[0]= "==============================================\n" + 
+                       $" {macchina}                                   \n" +
+                       "==============================================";
+            figure[1] = "==============================================\n" +
+                       $"           {macchina}                          \n" +
+                       "==============================================";
+            figure[2] = "==============================================\n" +
+                       $"                     {macchina}                \n" +
+                       "==============================================";
+            figure[3] = "==============================================\n" +
+                       $"                              {macchina}       \n" +
+                       "==============================================";
+            return figure;
         }
 
     }

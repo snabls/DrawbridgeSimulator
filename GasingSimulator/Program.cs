@@ -4,7 +4,7 @@
     {
         static void Main(string[] args)
         {
-            Ponte ViadotttoKennedy = new Ponte();
+            Ponte ViadottoKennedy = new Ponte();
             int scelta = 0;
             while(scelta != 3)
             {
@@ -17,7 +17,18 @@
                 switch (scelta) 
                 {
                     case 1:
-                        Console.WriteLine
+                        ViadottoKennedy.AggiungiMacchina();
+                        Console.WriteLine(ViadottoKennedy.ToString());
+                        break;
+                    case 2:
+                        Console.Clear();
+                        Console.WriteLine(ViadottoKennedy.ToString());
+                        Console.WriteLine(Ponte.AttraversanoMacchine());
+                        scelta = 3;
+                        break;
+                    case 3:
+                        break;
+
                 }
             }
         }
