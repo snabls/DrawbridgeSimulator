@@ -10,7 +10,7 @@ namespace GasingSimulator
     public class Ponte
     {
         static SemaphoreSlim PonteLevatoio {  get; set; }
-        public static List<string> Macchine{ get; set; }
+        public static List<string> Macchine{ get; set; } // TODO: dx e sx
         public Ponte()
         {
             Macchine = new List<string>();
@@ -22,20 +22,12 @@ namespace GasingSimulator
             Macchine.Add($"Macchina {Macchine.Count}");
         }
 
-        static async Task PassaMacchina(string macchina)
+        static async Task PassaMacchina(string macchina)//TODO PassaMacchinaDxSx e PassaMacchinaSxDx
         {
-            string[] animazioni;
             await PonteLevatoio.WaitAsync();
             try
             {
-                animazioni = Attraversamento(macchina);
-                for (int i = 0; i < 4; i++)
-                {
-
-                    Console.WriteLine(animazioni[i]);
-                    Thread.Sleep(1000);
-                    Console.Clear();
-                }
+                Attraversamento(macchina);
                 Console.WriteLine($"{macchina} ha finito di attraversare il ponte...");
             }
             finally
@@ -50,11 +42,118 @@ namespace GasingSimulator
             for (int i = 0; i < Macchine.Count; i++)
             {
                 tasks[i] = PassaMacchina(Macchine[i]);
-            }
 
+            }
+           
             await Task.WhenAll(tasks);
             Console.WriteLine("Tutte le macchine hanno attraversato");
         }
+
+
+        //public static async Task AttraversanoMacchine() 2 (Perplexity)
+        //{
+        //    Task[] tasks = new Task[Macchine.Count];
+        //    for (int i = 0; i < Macchine.Count; i++)
+        //    {
+        //        tasks[i] = PassaMacchina(Macchine[i]);
+        //    }
+
+        //    await Task.WhenAll(tasks);
+        //    Console.WriteLine("Tutte le macchine hanno attraversato");
+        //}
+
+        //private static async Task PassaMacchina(string macchina) Perplexity
+        //{
+        //    await PonteLevatoio.WaitAsync();
+        //    try
+        //    {
+        //        string[] animazioni = Attraversamento(macchina);
+        //        for (int i = 0; i < animazioni.Length; i++)
+        //        {
+        //            Console.WriteLine(animazioni[i]);
+        //            Thread.Sleep(1000); // Simula il tempo di attraversamento
+        //        }
+        //        Console.Clear();
+        //        Console.WriteLine($"{macchina} ha finito di attraversare il ponte...");
+        //    }
+        //    finally
+        //    {
+        //        PonteLevatoio.Release();
+        //    }
+        //}
+
+        //private static async Task PassaMacchina(string macchina) 2 (Perplexity)
+        //{
+        //    await PonteLevatoio.WaitAsync();
+        //    try
+        //    {
+        //        string[] animazioni = Attraversamento(macchina);
+        //        for (int i = 0; i < animazioni.Length; i++)
+        //        {
+        //            lock (Console.Out) // Per evitare conflitti tra thread
+        //            {
+        //                Console.SetCursorPosition(0, i); // Posiziona il cursore per mantenere le linee ordinate
+        //                Console.WriteLine(animazioni[i]);
+        //            }
+        //            Thread.Sleep(1000);
+        //        }
+        //        Console.WriteLine($"{macchina} ha finito di attraversare il ponte...");
+        //    }
+        //    finally
+        //    {
+        //        PonteLevatoio.Release();
+        //    }
+        //}
+
+
+
+
+
+        //////////private static async Task PassaMacchina(string macchina, int posizione)
+        //////////{
+        //////////    await PonteLevatoio.WaitAsync();
+        //////////    try
+        //////////    {
+        //////////        string[] animazioni = Attraversamento(macchina);
+        //////////        for (int i = 0; i < animazioni.Length; i++)
+        //////////        {
+        //////////            lock (Console.Out) // Sincronizza l'accesso alla console
+        //////////            {
+        //////////                Console.SetCursorPosition(0, posizione); // Posiziona il cursore sulla riga corrispondente alla macchina
+        //////////                Console.WriteLine(animazioni[i].PadRight(Console.WindowWidth)); // Scrivi l'animazione
+        //////////            }
+        //////////            Thread.Sleep(1000); // Simula il tempo di attraversamento
+        //////////        }
+        //////////        lock (Console.Out)
+        //////////        {
+        //////////            Console.SetCursorPosition(0, posizione);
+        //////////            Console.WriteLine($"{macchina} ha finito di attraversare il ponte...".PadRight(Console.WindowWidth));
+        //////////        }
+        //////////    }
+        //////////    finally
+        //////////    {
+        //////////        PonteLevatoio.Release();
+        //////////    }
+        //////////}
+
+        //////////public static async Task AttraversanoMacchine()
+        //////////{
+        //////////    Task[] tasks = new Task[Macchine.Count];
+        //////////    for (int i = 0; i < Macchine.Count; i++)
+        //////////    {
+        //////////        int posizione = i * 2; // Ogni macchina avrà una riga separata (spaziata di 2 righe)
+        //////////        tasks[i] = PassaMacchina(Macchine[i], posizione);
+        //////////    }
+
+        //////////    await Task.WhenAll(tasks);
+        //////////    Console.WriteLine("Tutte le macchine hanno attraversato");
+        //////////}
+
+
+
+
+
+
 
         public override string ToString()
         {
@@ -67,22 +166,27 @@ namespace GasingSimulator
             return sb.ToString();
         }
 
-        public static string[] Attraversamento(string macchina)
+        public static void Attraversamento(string macchina)
         {
-            string[] figure = new string[4];
-            figure[0]= "==============================================\n" + 
+            // TODO Gestire l'animazione dell'attraversamento con il SetCursor Position
+            Console.WriteLine("==============================================\n" +
                        $" {macchina}                                   \n" +
-                       "==============================================";
-            figure[1] = "==============================================\n" +
+                       "==============================================");
+            Thread.Sleep(1000);
+            Console.Clear(); 
+            Console.WriteLine("==============================================\n" +
                        $"           {macchina}                          \n" +
-                       "==============================================";
-            figure[2] = "==============================================\n" +
+                       "==============================================");
+            Thread.Sleep(1000);
+            Console.Clear();
+            Console.WriteLine("==============================================\n" +
                        $"                     {macchina}                \n" +
-                       "==============================================";
-            figure[3] = "==============================================\n" +
+                       "==============================================");
+            Thread.Sleep(1000);
+            Console.Clear();
+            Console.WriteLine("==============================================\n" +
                        $"                              {macchina}       \n" +
-                       "==============================================";
-            return figure;
+                       "==============================================");
         }
 
     }
