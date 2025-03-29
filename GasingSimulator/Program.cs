@@ -5,30 +5,30 @@
         static void Main(string[] args)
         {
             Ponte ViadottoKennedy = new Ponte();
-            int scelta = 0;
-            while(scelta != 3)
+            string scelta = "";
+            while(scelta != "E")
             {
                 Console.WriteLine("Benvenuto nel sistema di attraversamento macchine di Samuele Snabl");
                 Console.WriteLine("Scegli un opzione:");
-                Console.WriteLine("1. Aggiungi una macchina");
-                Console.WriteLine("2. Fai partire il ponte");
-                Console.WriteLine("3. Esci");
-                scelta = int.Parse(Console.ReadLine());
+                Console.WriteLine("L. Aggiungi una macchina a sinistra");
+                Console.WriteLine("R. Aggiungi una macchina a destra");
+                Console.WriteLine("P. Avvia il passaggio delle auto");
+                Console.WriteLine("E. Esci");
+                scelta = Console.ReadLine().ToUpper();
                 switch (scelta) 
                 {
-                    case 1:
-                        ViadottoKennedy.AggiungiMacchina();
+                    case "L":
+                        ViadottoKennedy.AggiungiMacchinaSx();
                         Console.WriteLine(ViadottoKennedy.ToString());
                         break;
-                    case 2:
-                        Console.Clear();
+                    case "R":
+                        ViadottoKennedy.AggiungiMacchinaDx();
                         Console.WriteLine(ViadottoKennedy.ToString());
-                        Console.WriteLine(Ponte.AttraversanoMacchine());
-                        scelta = 3;
                         break;
-                    case 3:
+                    case "P":
+                        Ponte.AttraversanoMacchine();
                         break;
-
+                    
                 }
             }
         }

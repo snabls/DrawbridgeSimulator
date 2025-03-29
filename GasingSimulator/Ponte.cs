@@ -10,25 +10,48 @@ namespace GasingSimulator
     public class Ponte
     {
         static SemaphoreSlim PonteLevatoio {  get; set; }
-        public static List<string> Macchine{ get; set; } // TODO: dx e sx
+        public static List<string> MacchineSx{ get; set; } // TODO: dx e sx
+        public static List<string> MacchineDx { get; set; }
+        public int NrMacchine {  get; set; }
         public Ponte()
         {
-            Macchine = new List<string>();
+            MacchineSx = new List<string>();
+            MacchineDx = new List<string>();
             PonteLevatoio = new SemaphoreSlim(4);
+            NrMacchine = 0;
         }
 
-        public void AggiungiMacchina()
+        public void AggiungiMacchinaSx()
         {
-            Macchine.Add($"Macchina {Macchine.Count}");
+            MacchineSx.Add($"Macchina {NrMacchine++}");
         }
 
-        static async Task PassaMacchina(string macchina)//TODO PassaMacchinaDxSx e PassaMacchinaSxDx
+        public void AggiungiMacchinaDx()
+        {
+            MacchineDx.Add($"Macchina {NrMacchine++}");
+        }
+
+        static async Task PassaMacchinaSxDx(string macchina, int index)//TODO PassaMacchinaDxSx e PassaMacchinaSxDx
         {
             await PonteLevatoio.WaitAsync();
             try
             {
-                Attraversamento(macchina);
-                Console.WriteLine($"{macchina} ha finito di attraversare il ponte...");
+                Console.SetCursorPosition(0, index % 4 * 4);
+                AttraversamentoSxDx(macchina);
+            }
+            finally
+            {
+                PonteLevatoio.Release();
+            }
+        }
+
+        static async Task PassaMacchinaDxSx(string macchina, int index)//TODO PassaMacchinaDxSx e PassaMacchinaSxDx
+        {
+            await PonteLevatoio.WaitAsync();
+            try
+            {
+                Console.SetCursorPosition(0, index % 4 * 4);
+                AttraversamentoDxSx(macchina);
             }
             finally
             {
@@ -38,14 +61,21 @@ namespace GasingSimulator
 
         public static async Task AttraversanoMacchine()
         {
-            Task[] tasks = new Task[Macchine.Count];
-            for (int i = 0; i < Macchine.Count; i++)
+            Task[] tasks1 = new Task[MacchineSx.Count];
+            for (int i = 0; i < MacchineSx.Count; i++)
             {
-                tasks[i] = PassaMacchina(Macchine[i]);
+                tasks1[i] = PassaMacchinaSxDx(MacchineSx[i], i);
 
             }
-           
-            await Task.WhenAll(tasks);
+            await Task.WhenAll(tasks1);
+            Task[] tasks2 = new Task[MacchineDx.Count];
+            for (int i = 0; i < MacchineDx.Count; i++)
+            {
+                tasks2[i] = PassaMacchinaDxSx(MacchineSx[i], i);
+
+            }
+            await Task.WhenAll(tasks2);
+
             Console.WriteLine("Tutte le macchine hanno attraversato");
         }
 
@@ -158,15 +188,21 @@ namespace GasingSimulator
         public override string ToString()
         {
             StringBuilder sb = new StringBuilder();
-            sb.AppendLine("Le seguenti macchine sono in coda");
-            foreach (string macchina in Macchine) 
+            sb.AppendLine("Le seguenti macchine sono in coda a sinistra");
+            foreach (string macchina in MacchineSx) 
             {
                 sb.AppendLine(macchina.ToString());
             }
-            return sb.ToString();
+            StringBuilder sb2 = new StringBuilder();
+            sb.AppendLine("Le seguenti macchine sono in coda a destra");
+            foreach (string macchina in MacchineDx)
+            {
+                sb2.AppendLine(macchina.ToString());
+            }
+            return sb.ToString() + sb2.ToString();
         }
 
-        public static void Attraversamento(string macchina)
+        public static void AttraversamentoSxDx(string macchina)
         {
             // TODO Gestire l'animazione dell'attraversamento con il SetCursor Position
             Console.WriteLine("==============================================\n" +
@@ -186,6 +222,39 @@ namespace GasingSimulator
             Console.Clear();
             Console.WriteLine("==============================================\n" +
                        $"                              {macchina}       \n" +
+                       "==============================================");
+            Thread.Sleep(1000);
+            Console.Clear();
+            Console.WriteLine("==============================================\n" +
+                       $"                                     {macchina}\n" +
+                       "==============================================");
+        }
+
+        public static void AttraversamentoDxSx(string macchina)
+        {
+            // TODO Gestire l'animazione dell'attraversamento con il SetCursor Position
+            Console.WriteLine("==============================================\n" +
+                       $"                                     {macchina}\n" +
+                       "==============================================");
+            Thread.Sleep(1000);
+            Console.Clear();
+            Console.WriteLine("==============================================\n" +
+                       $"                              {macchina}       \n" +
+                       "==============================================");
+            Thread.Sleep(1000);
+            Console.Clear();
+            Console.WriteLine("==============================================\n" +
+                       $"                     {macchina}                \n" +
+                       "==============================================");
+            Thread.Sleep(1000);
+            Console.Clear();
+            Console.WriteLine("==============================================\n" +
+                       $"           {macchina}                          \n" +
+                       "==============================================");
+            Thread.Sleep(1000);
+            Console.Clear();
+            Console.WriteLine("==============================================\n" +
+                       $" {macchina}                                   \n" +
                        "==============================================");
         }
 
