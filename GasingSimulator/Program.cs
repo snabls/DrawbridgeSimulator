@@ -2,35 +2,42 @@
 {
     internal class Program
     {
-        static void Main(string[] args)
+        static async Task Main(string[] args)
         {
+            Console.Clear();
             Ponte ViadottoKennedy = new Ponte();
             string scelta = "";
-            while(scelta != "E")
+
+            while (scelta != "E")
             {
-                Console.WriteLine("Benvenuto nel sistema di attraversamento macchine di Samuele Snabl");
-                Console.WriteLine("Scegli un opzione:");
-                Console.WriteLine("L. Aggiungi una macchina a sinistra");
-                Console.WriteLine("R. Aggiungi una macchina a destra");
-                Console.WriteLine("P. Avvia il passaggio delle auto");
-                Console.WriteLine("E. Esci");
+                RedrawMenu();
                 scelta = Console.ReadLine().ToUpper();
-                switch (scelta) 
+
+                switch (scelta)
                 {
                     case "L":
                         ViadottoKennedy.AggiungiMacchinaSx();
-                        Console.WriteLine(ViadottoKennedy.ToString());
                         break;
                     case "R":
                         ViadottoKennedy.AggiungiMacchinaDx();
-                        Console.WriteLine(ViadottoKennedy.ToString());
                         break;
                     case "P":
-                        Ponte.AttraversanoMacchine();
+                        await Ponte.AttraversanoMacchine();
                         break;
-                    
                 }
             }
+        }
+
+        private static void RedrawMenu()
+        {
+            Console.SetCursorPosition(0, 0);
+            Console.WriteLine("=== Sistema di Attraversamento ===");
+            Console.WriteLine("L. Aggiungi macchina a sinistra");
+            Console.WriteLine("R. Aggiungi macchina a destra");
+            Console.WriteLine("P. Avvia passaggio auto");
+            Console.WriteLine("E. Esci");
+            Console.WriteLine($"In coda: Sx={Ponte.MacchineSx.Count} Dx={Ponte.MacchineDx.Count}");
+            Console.Write("Scelta: ");
         }
     }
 }
