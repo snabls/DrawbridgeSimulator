@@ -5,15 +5,15 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace GasingSimulator
+namespace DrawbridgeSimulator
 {
     public class Ponte
     {
 
-        static SemaphoreSlim PonteLevatoio {  get; set; }
-        public static List<string> MacchineSx{ get; set; }
+        static SemaphoreSlim PonteLevatoio { get; set; }
+        public static List<string> MacchineSx { get; set; }
         public static List<string> MacchineDx { get; set; }
-        public int NrMacchine {  get; set; }
+        public int NrMacchine { get; set; }
         public Ponte()
         {
             MacchineSx = new List<string>();
